@@ -2,6 +2,12 @@
 
 ## Status (25 Sep 2026): the store is LIVE
 
+Latest fixes (25 Sep):
+- Orders placed while logged in now show under **My Orders**. Trevor's earlier order was linked by hand.
+- Search no longer crashes.
+- Gallery uploads show clear errors.
+- Prices are set: every men's item R3,999, every women's item R3,499.
+
 `https://stevenpickandwear.co.za` (and `www.`) runs the Steven Picknwear store on the VPS, with HTTPS. GMF is unaffected.
 
 | Task | Status |
@@ -17,7 +23,7 @@
 | Server config `config/config.local.php` (database password, secret key) | ✅ Done |
 | Test page removed, store is the homepage | ✅ Done |
 | **Bank details, prices and business details in Admin → Settings** | ⬜ Do this now |
-| **Email (SMTP) for order emails** | ⬜ Next, see "Email" below |
+| **Email via Brevo** (helper script `/root/set-brevo.sh` is ready on the server) | ⬜ Next, see "Email with Brevo" below |
 | Clean up the old `/var/www/stevenpickandwear.co.za` folder | ⬜ Optional, see bottom |
 
 ## Key details
@@ -53,20 +59,44 @@ Log in at `/dashboards/admin/`:
 
 ---
 
-## Email (next job)
+## Email with Brevo (next job)
 
-Order emails go to customers (order received, payment approved or rejected). Alerts go to you (new order, proof of payment uploaded). Until SMTP is set up the store still works, but these emails probably won't arrive.
+Brevo **sends** the store's emails:
+- to customers: order received, payment approved or rejected
+- to you: new order, proof of payment uploaded, contact form
 
-1. Create the mailbox `info@stevenpickandwear.co.za`, using Truehost Workplace or Google Workspace.
-2. Add the MX, SPF (TXT) and DKIM records they give you in **Cloudflare DNS**, set to **DNS only** (grey cloud).
-3. Put the mailbox's SMTP details on the server (SERVER):
+Brevo doesn't *receive* email. Step 5 sets up receiving.
 
-   ```bash
-   nano /var/www/stevenpickandwear/config/config.local.php
+**1. Create a Brevo account** (free plan, 300 emails a day) at https://www.brevo.com with your own email.
+
+**2. Authenticate the domain** so emails don't land in spam:
+1. Brevo → **Senders, Domains & Dedicated IPs** → **Domains** → **Add a domain** → `stevenpickandwear.co.za`.
+2. Choose **Authenticate the domain yourself**. Brevo shows about 4 records: a `brevo-code` TXT, two DKIM CNAMEs (`brevo1._domainkey`, `brevo2._domainkey`) and a `_dmarc` TXT.
+3. Add each one in Cloudflare → DNS → **Add record**, exactly as shown, **Proxy status = DNS only** (grey).
+   - If Brevo offers **"Authenticate with Cloudflare"**, you can use that instead and it adds them for you.
+4. Back in Brevo, click **Authenticate this email domain**. All the lines should turn green. This can take up to an hour.
+
+**3. Add the sender:** Brevo → **Senders** → **Add sender** → name `Steven Picknwear`, email `info@stevenpickandwear.co.za`.
+
+**4. Get the SMTP key and save it on the server:**
+1. Brevo → your name (top right) → **SMTP & API** → **SMTP** tab → **Generate a new SMTP key**. Copy the key, and note the **Login** shown on that page (like `xxxxxx@smtp-brevo.com`).
+2. On the PC, run:
+
+   ```powershell
+   ssh gmf
+   bash /root/set-brevo.sh
    ```
 
-   Fill in `SMTP_HOST`, `SMTP_PORT` (587, or 465 for SSL), `SMTP_USER` (the full email address) and `SMTP_PASS`. Save with **Ctrl+O**, **Enter**, **Ctrl+X**. The change applies straight away and Git never overwrites this file.
-4. Test: place a small order on the site and check both inboxes, including spam.
+3. Paste the Login, then the key (the key stays hidden as you paste). Press **Enter** to keep `info@stevenpickandwear.co.za` as the sender.
+4. Admin → **Settings** → **Email (Brevo SMTP)** should now say **Connected**. Click **Send Test Email** and check the inbox, including spam.
+
+**5. Receive email at info@ (free):**
+1. Cloudflare → `stevenpickandwear.co.za` → **Email** → **Email Routing** → **Get started**.
+2. Forward `info@stevenpickandwear.co.za` to your Gmail. Cloudflare adds the MX records itself.
+3. Customer replies to order emails then reach your Gmail.
+4. Later you can switch to a real mailbox (Truehost Workplace or Google Workspace) instead.
+
+> Keep the SMTP key private. Don't send it by WhatsApp or email. If it leaks, delete it in Brevo, generate a new one and run `set-brevo.sh` again.
 
 ---
 
@@ -121,5 +151,5 @@ rm -rf /var/www/stevenpickandwear.co.za
 | Blank white page | PHP error: `ssh gmf "tail -30 /var/log/apache2/stevenpickandwear_error.log"` |
 | 400 Bad Request in the browser | Proxy protocol is off in the VPS panel for this domain. Turn it on. |
 | `curl http://127.0.0.1` on the server gives 400 | Normal. Apache expects Proxy protocol. |
-| Order emails don't arrive | SMTP isn't set, or it's set wrong (Email step 3). Check spam, and add SPF/DKIM in Cloudflare. |
+| Order emails don't arrive | Admin → Settings → **Send Test Email** shows the exact error. Check the Brevo domain is authenticated and the sender is added, and re-run `bash /root/set-brevo.sh` if the key is wrong. |
 | Too many redirects | The Cloudflare cloud is orange. Set it to grey. |
