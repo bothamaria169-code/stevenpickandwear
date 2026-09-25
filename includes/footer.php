@@ -59,6 +59,17 @@
   </div>
 </footer>
 
+<?php
+// Floating WhatsApp chat button (number from Admin > Settings > Contact & Social). Hidden in the admin.
+$waNumber = preg_replace('/[^0-9]/', '', (string) get_setting('contact_whatsapp', ''));
+if ($waNumber !== '' && !str_contains($body_class ?? '', 'admin-body')):
+    $waText = rawurlencode('Hi ' . SITE_NAME . ', I have a question about ');
+?>
+<a href="https://wa.me/<?= $waNumber ?>?text=<?= $waText ?>" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+<?php endif; ?>
+
 <div class="ric-toast-wrap" id="toastWrap"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

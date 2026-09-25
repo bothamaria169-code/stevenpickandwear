@@ -90,6 +90,17 @@ require_once __DIR__ . '/includes/header.php';
           </a>
           <?php endif; ?>
 
+          <?php if ($address = get_setting('business_address')): ?>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=<?= rawurlencode(str_replace("
+", ', ', $address) . ', South Africa') ?>" target="_blank" rel="noopener" class="d-flex align-items-center gap-3 mb-4 text-dark">
+            <span class="btn-icon-neu" style="width:48px;height:48px;flex-shrink:0;"><i class="fa-solid fa-location-dot"></i></span>
+            <span>
+              <span class="d-block small text-muted-ric">Visit Us</span>
+              <span class="fw-600"><?= nl2br(htmlspecialchars($address)) ?></span>
+            </span>
+          </a>
+          <?php endif; ?>
+
           <?php if ($instagram): ?>
           <a href="<?= htmlspecialchars($instagram) ?>" target="_blank" rel="noopener" class="d-flex align-items-center gap-3 text-dark">
             <span class="btn-icon-neu" style="width:48px;height:48px;flex-shrink:0;"><i class="fa-brands fa-instagram"></i></span>
