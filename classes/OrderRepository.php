@@ -82,8 +82,8 @@ final class OrderRepository
             $params[':payment'] = $filters['payment'];
         }
         if (!empty($filters['search'])) {
-            $where[] = '(o.order_number LIKE :search OR o.guest_name LIKE :search OR o.guest_email LIKE :search)';
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $where[] = '(o.order_number LIKE :s1 OR o.guest_name LIKE :s2 OR o.guest_email LIKE :s3)';
+            $params[':s1'] = $params[':s2'] = $params[':s3'] = '%' . $filters['search'] . '%';
         }
 
         $whereSql = implode(' AND ', $where);

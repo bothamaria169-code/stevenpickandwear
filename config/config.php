@@ -60,6 +60,7 @@ defined('SMTP_HOST') || define('SMTP_HOST', '');
 defined('SMTP_PORT') || define('SMTP_PORT', 587);
 defined('SMTP_USER') || define('SMTP_USER', '');
 defined('SMTP_PASS') || define('SMTP_PASS', '');
+defined('SMTP_FROM_EMAIL') || define('SMTP_FROM_EMAIL', SITE_EMAIL); // must be verified in Brevo
 define('SMTP_FROM_NAME', SITE_NAME);
 
 // Where contact-form enquiries and order notifications are sent.

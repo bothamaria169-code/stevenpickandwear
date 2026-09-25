@@ -41,6 +41,27 @@ function editorial_image(string $key): ?string
     return !empty($map[$key]) ? product_image($map[$key]) : null;
 }
 
+// ── Upload helpers ─────────────────────────────────────────────────────
+/** Plain-English message for a PHP upload error code (null when the upload is fine). */
+function upload_error_message(int $code): ?string
+{
+    return match ($code) {
+        UPLOAD_ERR_OK         => null,
+        UPLOAD_ERR_INI_SIZE,
+        UPLOAD_ERR_FORM_SIZE  => 'is too large (max ' . ini_get('upload_max_filesize') . 'B per photo).',
+        UPLOAD_ERR_PARTIAL    => 'only partly uploaded. Please try again.',
+        UPLOAD_ERR_NO_FILE    => 'was not received.',
+        default               => 'could not be uploaded (server error ' . $code . ').',
+    };
+}
+
+/** True when the whole request was bigger than post_max_size, so PHP dropped every field. */
+function post_too_large(): bool
+{
+    return ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && empty($_POST) && empty($_FILES)
+        && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0;
+}
+
 // ── EFT / proof of payment ──────────────────────────────────────────────
 /**
  * Validates and stores an uploaded proof of payment in uploads/proof-of-payments/
@@ -235,8 +256,8 @@ function get_blogs(array $filters = [], int $page = 1, int $perPage = 9): array
         $params[':status'] = $status;
     }
     if (!empty($filters['search'])) {
-        $where[] = '(title LIKE :s OR excerpt LIKE :s)';
-        $params[':s'] = '%' . $filters['search'] . '%';
+        $where[] = '(title LIKE :s1 OR excerpt LIKE :s2)';
+        $params[':s1'] = $params[':s2'] = '%' . $filters['search'] . '%';
     }
     $whereSql = implode(' AND ', $where);
 

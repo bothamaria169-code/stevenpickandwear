@@ -75,7 +75,7 @@ require_once __DIR__ . '/../../includes/header.php';
         <?= csrf_field() ?>
         <div class="mb-3">
           <label class="form-label-ric">Photos</label>
-          <input type="file" name="photos[]" class="form-control-ric" accept="image/*" multiple required>
+          <input type="file" name="photos[]" class="form-control-ric" accept="image/jpeg,image/png,image/webp" multiple required>
           <p class="small text-muted-ric mt-1">Select as many as you like — each photo becomes its own draft product.</p>
         </div>
         <div class="row g-3 mb-3">

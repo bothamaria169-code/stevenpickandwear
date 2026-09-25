@@ -43,8 +43,8 @@ final class ProductRepository
             $params[':category'] = $filters['category'];
         }
         if (!empty($filters['search'])) {
-            $where[] = '(p.name LIKE :search OR p.short_desc LIKE :search OR p.tags LIKE :search)';
-            $params[':search'] = '%' . $filters['search'] . '%';
+            $where[] = '(p.name LIKE :s1 OR p.short_desc LIKE :s2 OR p.tags LIKE :s3)';
+            $params[':s1'] = $params[':s2'] = $params[':s3'] = '%' . $filters['search'] . '%';
         }
         if (!empty($filters['style'])) {
             // Tags are comma separated, e.g. "suits,suits,women"; match a whole tag.

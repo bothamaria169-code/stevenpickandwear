@@ -6,16 +6,24 @@ $uploader = new ImageUploader();
 $errors = [];
 $success = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && verify_csrf($_POST['csrf_token'] ?? '')) {
+if (post_too_large()) {
+    $errors[] = 'That upload was too big in total (max ' . ini_get('post_max_size') . 'B at once). Upload fewer photos at a time.';
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && verify_csrf($_POST['csrf_token'] ?? '')) {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'upload') {
-        if (empty($_FILES['images']['tmp_name'][0])) {
+        $names = array_filter($_FILES['images']['name'] ?? []);
+        if (!$names) {
             $errors[] = 'Please choose at least one image.';
         } else {
+            $added = 0;
             $maxSort = (int) db()->query("SELECT COALESCE(MAX(sort_order),0) FROM gallery_images")->fetchColumn();
             foreach ($_FILES['images']['tmp_name'] as $i => $tmp) {
-                if (!$tmp) continue;
+                if (($_FILES['images']['name'][$i] ?? '') === '') continue;
+                if ($msg = upload_error_message((int) $_FILES['images']['error'][$i])) {
+                    $errors[] = $_FILES['images']['name'][$i] . ' ' . $msg;
+                    continue;
+                }
                 $file = ['tmp_name' => $tmp, 'name' => $_FILES['images']['name'][$i], 'error' => $_FILES['images']['error'][$i], 'size' => $_FILES['images']['size'][$i]];
                 try {
                     $upload = $uploader->uploadFromRequest($file, 'gallery');
@@ -25,14 +33,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verify_csrf($_POST['csrf_token'] ??
                         'image' => $upload['secure_url'],
                         'sort_order' => ++$maxSort,
                     ]);
+                    $added++;
                 } catch (Throwable $e) {
                     $errors[] = $_FILES['images']['name'][$i] . ': ' . $e->getMessage();
                 }
             }
-            $success = 'Gallery updated.';
+            if ($added > 0) {
+                $success = $added . ' photo' . ($added === 1 ? '' : 's') . ' added to the Lookbook.';
+            }
         }
     } elseif ($action === 'delete') {
-        db()->prepare("DELETE FROM gallery_images WHERE id = :id")->execute([':id' => safe_int($_POST['id'] ?? 0)]);
+        $gid = safe_int($_POST['id'] ?? 0);
+        $stmt = db()->prepare("SELECT image FROM gallery_images WHERE id = :id");
+        $stmt->execute([':id' => $gid]);
+        if ($img = $stmt->fetchColumn()) {
+            $uploader->delete((string) $img); // removes the file too (only for files under uploads/)
+        }
+        db()->prepare("DELETE FROM gallery_images WHERE id = :id")->execute([':id' => $gid]);
         $success = 'Image removed.';
     } elseif ($action === 'reorder') {
         foreach ($_POST['sort'] ?? [] as $id => $order) {
@@ -63,7 +80,7 @@ require_once __DIR__ . '/../../includes/header.php';
         <?= csrf_field() ?><input type="hidden" name="action" value="upload">
         <div class="col-md-4"><label class="form-label-ric">Title (optional)</label><input type="text" name="title" class="form-control-ric"></div>
         <div class="col-md-4"><label class="form-label-ric">Caption (optional)</label><input type="text" name="caption" class="form-control-ric"></div>
-        <div class="col-md-4"><label class="form-label-ric">Images</label><input type="file" name="images[]" class="form-control-ric" accept="image/*" multiple required></div>
+        <div class="col-md-4"><label class="form-label-ric">Images</label><input type="file" name="images[]" class="form-control-ric" accept="image/jpeg,image/png,image/webp" multiple required></div>
         <div class="col-12"><button type="submit" class="btn-ric">Upload</button></div>
       </form>
     </div>

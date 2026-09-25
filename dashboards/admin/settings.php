@@ -3,11 +3,17 @@ require_once __DIR__ . '/../../includes/functions.php';
 $current_user = require_auth('admin');
 
 $success = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && verify_csrf($_POST['csrf_token'] ?? '')) {
+$testResult = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'test_email' && verify_csrf($_POST['csrf_token'] ?? '')) {
+    $to = safe_email($_POST['test_to'] ?? '') ?: $current_user['email'];
+    $ok = Mailer::send($to, 'Test email from ' . SITE_NAME, email_wrap('<p>This is a test email from your store. If you can read this, order emails are working.</p><p>Sent ' . date('d M Y, H:i') . '.</p>'));
+    $testResult = $ok ? ['ok' => true, 'msg' => 'Test email sent to ' . $to . '. Check the inbox (and spam).']
+                      : ['ok' => false, 'msg' => 'Sending failed: ' . (Mailer::$lastError ?: 'unknown error')];
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && verify_csrf($_POST['csrf_token'] ?? '')) {
     $fields = [
         'site_name', 'site_tagline', 'currency', 'currency_symbol', 'free_shipping_threshold', 'shipping_flat_rate',
         'bank_name', 'bank_account_holder', 'bank_account_number', 'bank_branch_code', 'bank_account_type',
-        'smtp_host', 'smtp_port', 'maintenance_mode',
+        'maintenance_mode',
         'contact_phone', 'contact_whatsapp', 'instagram_url', 'facebook_url', 'tiktok_url',
         'business_legal_name', 'business_reg_number', 'business_address',
     ];
@@ -80,12 +86,23 @@ require_once __DIR__ . '/../../includes/header.php';
           </div>
 
           <div class="admin-card mb-3">
-            <h3 class="h6 mb-3">Email (SMTP)</h3>
-            <div class="row g-2">
-              <div class="col-8"><label class="form-label-ric">SMTP Host</label><input type="text" name="smtp_host" class="form-control-ric" value="<?= htmlspecialchars($settings['smtp_host'] ?? '') ?>"></div>
-              <div class="col-4"><label class="form-label-ric">Port</label><input type="text" name="smtp_port" class="form-control-ric" value="<?= htmlspecialchars($settings['smtp_port'] ?? '') ?>"></div>
+            <h3 class="h6 mb-3">Email (Brevo SMTP)</h3>
+            <?php $smtpOn = SMTP_USER !== '' && SMTP_PASS !== ''; ?>
+            <p class="small mb-2">Status:
+              <span class="status-pill <?= $smtpOn ? 'active' : 'pending' ?>"><?= $smtpOn ? 'Connected' : 'Not set up' ?></span>
+            </p>
+            <p class="small text-muted-ric mb-3">
+              Server: <strong class="text-dark"><?= htmlspecialchars(SMTP_HOST ?: '—') ?></strong>
+              &middot; Sends from: <strong class="text-dark"><?= htmlspecialchars(SMTP_FROM_EMAIL) ?></strong><br>
+              The login is kept on the server in <code>config/config.local.php</code> for security.
+            </p>
+            <?php if ($testResult): ?>
+              <div class="small mb-2 p-2 rounded-3" style="background:<?= $testResult['ok'] ? 'rgba(76,122,74,.1)' : 'rgba(176,67,46,.1)' ?>;color:var(<?= $testResult['ok'] ? '--success' : '--danger' ?>);"><?= htmlspecialchars($testResult['msg']) ?></div>
+            <?php endif; ?>
+            <div class="d-flex gap-2 flex-wrap">
+              <input type="email" name="test_to" form="testEmailForm" class="form-control-ric" style="flex:1;min-width:200px;" value="<?= htmlspecialchars($current_user['email']) ?>">
+              <button type="submit" form="testEmailForm" class="btn-neu">Send Test Email</button>
             </div>
-            <p class="small text-muted-ric mt-2 mb-0">The email login (SMTP user and password) is set on the server in <code>config/config.local.php</code> for security.</p>
           </div>
 
           <div class="admin-card mb-3">
@@ -106,6 +123,7 @@ require_once __DIR__ . '/../../includes/header.php';
       </div>
       <button type="submit" class="btn-ric mt-3">Save Settings</button>
     </form>
+    <form method="POST" id="testEmailForm"><?= csrf_field() ?><input type="hidden" name="action" value="test_email"></form>
   </main>
 </div>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

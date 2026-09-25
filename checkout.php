@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
 
+$current_user = current_user();
 $items = cart_items();
 if (!$items) {
     redirect('cart.php');

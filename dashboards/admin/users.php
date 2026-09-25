@@ -31,7 +31,7 @@ $search = sanitize($_GET['search'] ?? '');
 $roleFilter = sanitize($_GET['role'] ?? '');
 $where = ['1=1'];
 $params = [];
-if ($search) { $where[] = '(name LIKE :s OR email LIKE :s)'; $params[':s'] = "%$search%"; }
+if ($search) { $where[] = '(name LIKE :s1 OR email LIKE :s2)'; $params[':s1'] = $params[':s2'] = "%$search%"; }
 if ($roleFilter) { $where[] = 'role = :r'; $params[':r'] = $roleFilter; }
 $stmt = db()->prepare("SELECT * FROM users WHERE " . implode(' AND ', $where) . " ORDER BY created_at DESC");
 $stmt->execute($params);

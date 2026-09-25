@@ -182,7 +182,7 @@ require_once __DIR__ . '/../../includes/header.php';
           <div class="admin-card mb-3">
             <h3 class="h6 mb-3">Featured Image</h3>
             <img src="<?= htmlspecialchars(product_image($product['featured_image'] ?? null)) ?>" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--radius);margin-bottom:.8rem;" onerror="this.src='<?= SITE_URL ?>/assets/img/placeholder.jpg'">
-            <input type="file" name="featured_image" class="form-control-ric" accept="image/*">
+            <input type="file" name="featured_image" class="form-control-ric" accept="image/jpeg,image/png,image/webp">
           </div>
 
           <?php if ($productId): ?>
@@ -198,7 +198,7 @@ require_once __DIR__ . '/../../includes/header.php';
               <?php endforeach; ?>
             </div>
             <?php endif; ?>
-            <input type="file" name="gallery_images[]" class="form-control-ric" accept="image/*" multiple>
+            <input type="file" name="gallery_images[]" class="form-control-ric" accept="image/jpeg,image/png,image/webp" multiple>
           </div>
           <?php endif; ?>
 
@@ -279,7 +279,7 @@ require_once __DIR__ . '/../../includes/header.php';
             <div class="col-md-2"><label class="form-label-ric">Stock</label><input type="number" name="v_stock_qty" class="form-control-ric" value="5"></div>
             <div class="col-md-3"><label class="form-label-ric">SKU</label><input type="text" name="v_sku" class="form-control-ric"></div>
             <div class="col-md-6"><label class="form-label-ric">Note <span class="text-muted-ric">(optional, shown when this size is picked)</span></label><input type="text" name="v_pattern_note" class="form-control-ric" placeholder="e.g. Slim fit, trousers 32in waist" maxlength="160"></div>
-            <div class="col-md-6"><label class="form-label-ric">Size Photo <span class="text-muted-ric">(optional)</span></label><input type="file" name="v_image" class="form-control-ric" accept="image/*"></div>
+            <div class="col-md-6"><label class="form-label-ric">Size Photo <span class="text-muted-ric">(optional)</span></label><input type="file" name="v_image" class="form-control-ric" accept="image/jpeg,image/png,image/webp"></div>
           </div>
           <button type="submit" class="btn-ric-sm btn-ric mt-3">Add Size</button>
         </form>

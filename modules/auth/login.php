@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/functions.php';
 
+$current_user = current_user();
 if (is_logged_in()) {
     redirect($current_user['role'] === 'admin' ? 'dashboards/admin/index.php' : 'dashboards/customer/index.php');
 }

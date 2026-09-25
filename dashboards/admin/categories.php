@@ -96,7 +96,7 @@ require_once __DIR__ . '/../../includes/header.php';
             <input type="hidden" name="action" value="save">
             <input type="hidden" name="id" id="catId" value="">
             <div class="mb-3"><label class="form-label-ric">Name</label><input type="text" name="name" id="catName" class="form-control-ric" required></div>
-            <div class="mb-3"><label class="form-label-ric">Cover Image</label><input type="file" name="image" class="form-control-ric" accept="image/*"></div>
+            <div class="mb-3"><label class="form-label-ric">Cover Image</label><input type="file" name="image" class="form-control-ric" accept="image/jpeg,image/png,image/webp"></div>
             <div class="mb-3"><label class="form-label-ric">Status</label>
               <select name="status" id="catStatus" class="form-control-ric"><option value="active">Active</option><option value="inactive">Inactive</option></select>
             </div>

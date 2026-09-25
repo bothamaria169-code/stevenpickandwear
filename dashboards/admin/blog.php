@@ -105,7 +105,7 @@ require_once __DIR__ . '/../../includes/header.php';
               <div id="blogEditor" style="background:#fff;border-radius:var(--radius);min-height:280px;"></div>
               <textarea name="content" id="blogContentHidden" style="display:none;"><?= htmlspecialchars($editing['content'] ?? '') ?></textarea>
             </div>
-            <div class="mb-3"><label class="form-label-ric">Cover Image</label><input type="file" name="image" class="form-control-ric" accept="image/*"></div>
+            <div class="mb-3"><label class="form-label-ric">Cover Image</label><input type="file" name="image" class="form-control-ric" accept="image/jpeg,image/png,image/webp"></div>
             <div class="d-flex gap-4 mb-3">
               <label class="d-flex align-items-center gap-2"><input type="checkbox" name="is_featured" value="1" <?= !empty($editing['is_featured']) ? 'checked' : '' ?>> Featured</label>
             </div>

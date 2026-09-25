@@ -14,8 +14,12 @@ use PHPMailer\PHPMailer\Exception as PHPMailerException;
  */
 final class Mailer
 {
+    /** Why the last send() failed (empty on success), for the admin's test-email button. */
+    public static string $lastError = '';
+
     public static function send(string $to, string $subject, string $htmlBody, string $altBody = '', string $replyTo = '', string $replyToName = ''): bool
     {
+        self::$lastError = '';
         if (SMTP_USER !== '' && SMTP_PASS !== '') {
             try {
                 $mail = new PHPMailer(true);
@@ -26,13 +30,18 @@ final class Mailer
                 $mail->Password   = SMTP_PASS;
                 $mail->SMTPSecure = (int) SMTP_PORT === 465 ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = SMTP_PORT;
-                $mail->SMTPOptions = ['ssl' => ['verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true]];
+                $mail->Timeout    = 15; // never let a slow mail server hang checkout
+                $mail->CharSet    = 'UTF-8';
 
-                // From must be the authenticated mailbox or the host will reject it.
-                $mail->setFrom(SMTP_USER, SMTP_FROM_NAME);
+                // From = the shop address. With Brevo, SMTP_USER is a login like
+                // "xxxx@smtp-brevo.com", so the From address is separate and must be
+                // a sender/domain verified in Brevo.
+                $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
                 $mail->addAddress($to);
                 if ($replyTo !== '') {
                     $mail->addReplyTo($replyTo, $replyToName ?: $replyTo);
+                } else {
+                    $mail->addReplyTo(SITE_EMAIL, SMTP_FROM_NAME);
                 }
                 $mail->isHTML(true);
                 $mail->Subject = $subject;
@@ -41,16 +50,22 @@ final class Mailer
 
                 return $mail->send();
             } catch (PHPMailerException $e) {
+                self::$lastError = $e->getMessage();
                 error_log('Mailer SMTP failed: ' . $e->getMessage());
+                return false;
             }
         }
 
-        $fromAddr = (SMTP_USER !== '') ? SMTP_USER : SITE_EMAIL;
+        $fromAddr = SMTP_FROM_EMAIL;
         $headers = "MIME-Version: 1.0\r\nContent-Type: text/html; charset=UTF-8\r\n";
         $headers .= 'From: ' . SMTP_FROM_NAME . ' <' . $fromAddr . ">\r\n";
         if ($replyTo !== '') {
             $headers .= 'Reply-To: ' . $replyTo . "\r\n";
         }
-        return @mail($to, $subject, $htmlBody, $headers);
+        $ok = @mail($to, $subject, $htmlBody, $headers);
+        if (!$ok) {
+            self::$lastError = 'SMTP is not configured and PHP mail() failed.';
+        }
+        return $ok;
     }
 }
