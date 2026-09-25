@@ -22,6 +22,7 @@ $nav_groups = [
     ],
     'System' => [
         ['href' => 'settings.php', 'icon' => 'fa-gear', 'label' => 'Settings', 'page' => 'settings'],
+        ['href' => '../customer/account.php', 'icon' => 'fa-key', 'label' => 'My Account & Password', 'page' => 'account'],
     ],
 ];
 

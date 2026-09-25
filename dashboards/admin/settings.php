@@ -85,7 +85,7 @@ require_once __DIR__ . '/../../includes/header.php';
               <div class="col-8"><label class="form-label-ric">SMTP Host</label><input type="text" name="smtp_host" class="form-control-ric" value="<?= htmlspecialchars($settings['smtp_host'] ?? '') ?>"></div>
               <div class="col-4"><label class="form-label-ric">Port</label><input type="text" name="smtp_port" class="form-control-ric" value="<?= htmlspecialchars($settings['smtp_port'] ?? '') ?>"></div>
             </div>
-            <p class="small text-muted-ric mt-2 mb-0">SMTP username/password are set in <code>config/config.php</code> for security.</p>
+            <p class="small text-muted-ric mt-2 mb-0">The email login (SMTP user and password) is set on the server in <code>config/config.local.php</code> for security.</p>
           </div>
 
           <div class="admin-card mb-3">

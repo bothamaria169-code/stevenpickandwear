@@ -12,3 +12,6 @@ product-images/
 # Local-only
 .claude/
 *.log
+
+# Owner documents (not for the website)
+*.pdf

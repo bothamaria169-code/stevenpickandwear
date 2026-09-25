@@ -17,7 +17,7 @@ for ($i = 6; $i >= 0; $i--) {
     $chartData[] = $byDay[$d] ?? 0;
 }
 
-$lowStock = db()->query("SELECT p.name, v.size_sa, v.stock_qty FROM product_variants v JOIN products p ON p.id = v.product_id WHERE v.stock_qty BETWEEN 1 AND 1 ORDER BY v.id DESC LIMIT 5")->fetchAll();
+$lowStock = db()->query("SELECT p.name, v.size_sa, v.stock_qty FROM product_variants v JOIN products p ON p.id = v.product_id WHERE v.stock_qty BETWEEN 1 AND 2 ORDER BY v.stock_qty ASC, v.id DESC LIMIT 5")->fetchAll();
 
 $page_title = 'Admin Dashboard — ' . SITE_NAME;
 $body_class = 'admin-body';
@@ -48,7 +48,7 @@ require_once __DIR__ . '/../../includes/header.php';
       </div>
       <div class="col-lg-5">
         <div class="admin-card h-100">
-          <h3 class="h6 mb-3">Last-One-Standing <span class="small text-muted-ric fw-400">(1 unit left)</span></h3>
+          <h3 class="h6 mb-3">Low Stock <span class="small text-muted-ric fw-400">(2 or fewer left)</span></h3>
           <?php if ($lowStock): ?>
             <?php foreach ($lowStock as $ls): ?>
               <div class="d-flex justify-content-between small mb-2 pb-2" style="border-bottom:1px solid var(--border-light);">
@@ -57,7 +57,7 @@ require_once __DIR__ . '/../../includes/header.php';
               </div>
             <?php endforeach; ?>
           <?php else: ?>
-            <p class="small text-muted-ric mb-0">No single-unit pieces right now.</p>
+            <p class="small text-muted-ric mb-0">No sizes are running low.</p>
           <?php endif; ?>
         </div>
       </div>
