@@ -1,0 +1,14 @@
+# Server keeps its own copies of these; Git must never overwrite them.
+config/config.local.php
+uploads/*
+!uploads/.htaccess
+!uploads/proof-of-payments/
+uploads/proof-of-payments/*
+!uploads/proof-of-payments/.htaccess
+
+# Original photos (web copies live in assets/img/products/)
+product-images/
+
+# Local-only
+.claude/
+*.log

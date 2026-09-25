@@ -1,0 +1,3 @@
+# Bank proofs contain personal data: never serve them directly.
+# pop.php checks who is asking and streams the file.
+Require all denied

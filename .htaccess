@@ -1,0 +1,16 @@
+# Steven Picknwear — root access rules
+Options -Indexes
+
+# Block sensitive file types anywhere they appear
+<FilesMatch "\.(sql|md|log|bak|ini|sh|lock|py|json|example\.php)$">
+  Require all denied
+</FilesMatch>
+
+# Block all .txt (credentials/notes)…
+<FilesMatch "\.txt$">
+  Require all denied
+</FilesMatch>
+# …except robots.txt
+<Files "robots.txt">
+  Require all granted
+</Files>

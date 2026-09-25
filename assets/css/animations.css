@@ -1,0 +1,28 @@
+/* ============================================================
+   Steven Picknwear — supplementary keyframes
+   Scroll-reveal is handled by .reveal in custom-style.css + a tiny
+   IntersectionObserver in app.js; this file covers the rest.
+   ============================================================ */
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fade-in { animation: fadeIn .6s ease both; }
+.float-y { animation: floatY 4s ease-in-out infinite; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--cream) 25%, var(--cream-2) 37%, var(--cream) 63%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: var(--radius);
+}
+
+.spinner-ric { width: 22px; height: 22px; border: 3px solid var(--border-light); border-top-color: var(--saddle); border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
+
+.hover-lift { transition: var(--transition-fast); }
+.hover-lift:hover { transform: translateY(-4px); }
+
+.icon-bounce { animation: iconBounce .5s cubic-bezier(.36,.07,.19,.97); }
+@keyframes iconBounce { 0%,100% { transform: scale(1); } 30% { transform: scale(1.35); } 60% { transform: scale(.92); } }

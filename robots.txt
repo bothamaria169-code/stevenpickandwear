@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /dashboards/
+Disallow: /modules/auth/
+Disallow: /modules/api/
+Disallow: /cart.php
+Disallow: /checkout.php
+Allow: /

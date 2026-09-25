@@ -1,0 +1,75 @@
+/* ============================================================
+   Steven Picknwear — responsive breakpoints
+   Scale matches the proven Muzuri cascade: 1400 / 992 / 768 / 480
+   ============================================================ */
+
+html, body { overflow-x: hidden; }
+
+/* ≥1400px — roomier product grid */
+@media (min-width: 1400px) {
+  .product-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* 992–1399px */
+@media (max-width: 1399px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); gap: 1.3rem; }
+}
+
+/* 768–991px — tablet */
+@media (max-width: 991px) {
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
+  .story-split { grid-template-columns: 1fr; gap: 2rem; }
+  .site-header nav.desktop-nav { display: none; }
+  .admin-sidebar { display: none; }
+  .admin-main { padding: 1.5rem 1.2rem 5rem; }
+  .admin-drawer-toggle { display: flex; }
+  .section { padding: 3.6rem 0; }
+}
+
+/* ≤767px — mobile */
+@media (max-width: 767px) {
+  .container-ric { padding: 0 16px; }
+  .hero { min-height: 100vh; }
+  .hero-content { padding: 5rem 0 3rem; text-align: center; }
+  .hero-lede { margin-left: auto; margin-right: auto; }
+  .hero-title { font-size: clamp(2rem, 9vw, 2.8rem); }
+  .section-heading { flex-direction: column; align-items: flex-start; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: .8rem; }
+  .product-card-body { padding: .8rem .9rem .2rem; }
+  .product-card-name { font-size: .92rem; }
+  .product-card-footer { padding: .7rem .9rem .9rem; }
+  .site-footer { padding: 3rem 0 6.5rem; }
+  body.has-bottom-nav { padding-bottom: 64px; }
+  .mobile-bottom-nav { display: flex !important; }
+  .site-header nav.desktop-nav { display: none; }
+  .filters-bar { overflow-x: auto; flex-wrap: nowrap; padding-bottom: .4rem; }
+  .story-split img { order: -1; }
+}
+
+/* ≤480px — small phones */
+@media (max-width: 480px) {
+  .product-grid { grid-template-columns: 1fr 1fr; gap: .6rem; }
+  .btn-ric, .btn-ric-outline { width: 100%; }
+  .hero-title { font-size: 2rem; }
+}
+
+/* Touch devices — no hover-only reveals */
+@media (hover: none) {
+  .product-card-actions { opacity: 1; transform: none; position: static; flex-direction: row; justify-content: flex-end; margin-top: .5rem; }
+  .product-card-img-wrap { padding-bottom: 0; }
+}
+
+.mobile-bottom-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(250,246,240,.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-light);
+  padding: .6rem 1rem calc(.6rem + env(safe-area-inset-bottom));
+  justify-content: space-between; align-items: center;
+}
+.mobile-bottom-nav a { display: flex; flex-direction: column; align-items: center; gap: .2rem; font-size: .62rem; color: var(--text-muted); font-weight: 600; position: relative; flex: 1; }
+.mobile-bottom-nav a i { font-size: 1.15rem; }
+.mobile-bottom-nav a.active { color: var(--saddle); }
+
+@media print {
+  .site-header, .site-footer, .mobile-bottom-nav, .hero canvas { display: none !important; }
+}
