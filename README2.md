@@ -11,7 +11,10 @@ On the PC, `git push github main` updates GitHub.
 
 **3. Site files, choose one:**
 - **GitHub (preferred):** cPanel → **Git Version Control** → **Create** → Clone URL `https://github.com/bothamaria169-code/stevenpickandwear.git`, repository path e.g. `/home/nlnthdft/repositories/stevenpickandwear`. Then **Manage** → **Pull or Deploy** → **Deploy HEAD Commit**. `.cpanel.yml` copies the site into `/home/nlnthdft/public_html/`. If your cPanel username or folder is different, change `DEPLOYPATH` in `.cpanel.yml` first. Each later update: push to GitHub, then **Update from Remote** + **Deploy HEAD Commit**.
-- **File Manager:** upload `dist/stevenpickandwear-site.zip` to `public_html`, **Extract**, then edit `config/config.local.php` (step 2).
+- **File Manager:** upload `dist/stevenpickandwear-site.zip` to `public_html`, **Extract**, then edit `config/config.local.php` (step 2). Rebuild the zip with `python scripts/build-zip.py`.
+  - **No CSS or images (403 Forbidden)?** The files aren't readable by the web server. Upload `dist/fix-perms.php` to `public_html` and open `http://stevenpickandwear.co.za/fix-perms.php` once. It sets folders to 755 and files to 644, then deletes itself.
+
+**HTTPS:** cPanel → **SSL/TLS Status** → **Run AutoSSL** (needs the domain pointing at the host, which it does: `102.212.247.51`). Until then only `http://` works.
 
 **4. After it's up:** log in at `/dashboards/admin/`, **change the admin password** (its hash is in the public repo's SQL), check Settings → Banking Details, and set up email (Brevo section below).
 
