@@ -4,10 +4,16 @@ $current_user = require_auth('admin');
 
 $success = '';
 $testResult = null;
+function mail_host(): string
+{
+    return method_exists('Mailer', 'smtpHost') ? Mailer::smtpHost() : (string) SMTP_HOST;
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'test_email' && verify_csrf($_POST['csrf_token'] ?? '')) {
     $to = safe_email($_POST['test_to'] ?? '') ?: $current_user['email'];
     $ok = Mailer::send($to, 'Test email from ' . SITE_NAME, email_wrap('<p>This is a test email from your store. If you can read this, order emails are working.</p><p>Sent ' . date('d M Y, H:i') . '.</p>'));
-    $via = Mailer::$lastTransport === 'smtp' ? 'SMTP (' . Mailer::smtpHost() . ')' : "the server's mail";
+    // Guarded so this page still loads if an older classes/Mailer.php is on the server.
+    $transport = property_exists('Mailer', 'lastTransport') ? Mailer::$lastTransport : 'smtp';
+    $via = $transport === 'smtp' ? 'SMTP (' . mail_host() . ')' : "the server's mail";
     $testResult = $ok ? ['ok' => true, 'msg' => 'Test email sent to ' . $to . ' through ' . $via . '. Check the inbox (and spam).'
                                        . (Mailer::$lastError ? ' Note: ' . Mailer::$lastError : '')]
                       : ['ok' => false, 'msg' => 'Sending failed: ' . (Mailer::$lastError ?: 'unknown error')];
@@ -94,7 +100,7 @@ require_once __DIR__ . '/../../includes/header.php';
               <span class="status-pill <?= $smtpOn ? 'active' : 'pending' ?>"><?= $smtpOn ? 'SMTP login set' : 'Server mail only' ?></span>
             </p>
             <p class="small text-muted-ric mb-3">
-              Server: <strong class="text-dark"><?= htmlspecialchars($smtpOn ? Mailer::smtpHost() . ':' . SMTP_PORT : 'this server') ?></strong>
+              Server: <strong class="text-dark"><?= htmlspecialchars($smtpOn ? mail_host() . ':' . SMTP_PORT : 'this server') ?></strong>
               &middot; Sends from: <strong class="text-dark"><?= htmlspecialchars(filter_var(SMTP_USER, FILTER_VALIDATE_EMAIL) ? SMTP_USER : SMTP_FROM_EMAIL) ?></strong><br>
               If the SMTP login fails, emails go out through the server's own mail instead.<br>
               The login is kept on the server in <code>config/config.local.php</code> for security.
