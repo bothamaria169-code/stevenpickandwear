@@ -12,9 +12,9 @@
           The International Brand Outlet. Suits, denim and occasion wear for women, men and kids, delivered across South Africa.
         </p>
         <div class="d-flex gap-2 mt-3">
-          <a href="<?= htmlspecialchars(get_setting('instagram_url') ?: '#') ?>" <?= get_setting('instagram_url') ? 'target="_blank" rel="noopener"' : '' ?> class="header-icon-btn" style="background:rgba(255,255,255,.06);color:var(--ivory);" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="<?= htmlspecialchars(get_setting('facebook_url') ?: '#') ?>" <?= get_setting('facebook_url') ? 'target="_blank" rel="noopener"' : '' ?> class="header-icon-btn" style="background:rgba(255,255,255,.06);color:var(--ivory);" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="<?= htmlspecialchars(get_setting('tiktok_url') ?: '#') ?>" <?= get_setting('tiktok_url') ? 'target="_blank" rel="noopener"' : '' ?> class="header-icon-btn" style="background:rgba(255,255,255,.06);color:var(--ivory);" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="<?= htmlspecialchars(get_setting('instagram_url') ?: '#') ?>" <?= get_setting('instagram_url') ? 'target="_blank" rel="noopener"' : '' ?> class="header-icon-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="<?= htmlspecialchars(get_setting('facebook_url') ?: '#') ?>" <?= get_setting('facebook_url') ? 'target="_blank" rel="noopener"' : '' ?> class="header-icon-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="<?= htmlspecialchars(get_setting('tiktok_url') ?: '#') ?>" <?= get_setting('tiktok_url') ? 'target="_blank" rel="noopener"' : '' ?> class="header-icon-btn" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
         </div>
       </div>
       <div class="col-lg-2 col-md-6 col-6">

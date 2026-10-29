@@ -56,7 +56,7 @@ function render_admin_nav(array $groups, string $current): void {
 <button id="adminDrawerToggle" class="admin-drawer-toggle btn-icon-neu" style="position:fixed;bottom:1.2rem;right:1.2rem;z-index:1200;width:52px;height:52px;background:var(--espresso);color:var(--ivory);box-shadow:var(--shadow-lg);">
   <i class="fa-solid fa-bars"></i>
 </button>
-<div id="adminDrawerBackdrop" style="display:none;position:fixed;inset:0;background:rgba(43,27,18,.5);z-index:1300;"></div>
+<div id="adminDrawerBackdrop" style="display:none;position:fixed;inset:0;background:rgba(58,6,8,.5);z-index:1300;"></div>
 <div id="adminDrawer" class="admin-sidebar" style="display:none;position:fixed;top:0;left:0;bottom:0;z-index:1400;width:280px;">
   <div class="brand">
     <img src="<?= SITE_URL ?>/assets/img/logo/logo-white.png" alt="<?= SITE_NAME ?>" style="height:34px;width:auto;">

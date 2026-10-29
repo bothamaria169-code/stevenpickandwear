@@ -1,0 +1,10 @@
+# cPanel > Git Version Control > "Deploy HEAD Commit" runs these tasks.
+# Copies the site into public_html. Leaves config/config.local.php and uploads/
+# on the server alone (they're not in Git), and keeps source/admin-only files out.
+# Change DEPLOYPATH if the site lives somewhere other than public_html.
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/nlnthdft/public_html/
+    - /usr/bin/rsync -a --exclude='.git' --exclude='.cpanel.yml' --exclude='.gitignore' --exclude='database/' --exclude='scripts/' --exclude='*.md' --exclude='coming-soon/' ./ $DEPLOYPATH
+    - /bin/mkdir -p ${DEPLOYPATH}uploads/products ${DEPLOYPATH}uploads/proof-of-payments

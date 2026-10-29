@@ -31,10 +31,10 @@ $extra_css        = $extra_css ?? [];
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/theme.css">
-<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/custom-style.css">
-<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/animations.css">
-<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/responsive.css">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/theme.css?v=<?= filemtime(__DIR__ . "/../assets/css/theme.css") ?>">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/custom-style.css?v=<?= filemtime(__DIR__ . "/../assets/css/custom-style.css") ?>">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/animations.css?v=<?= filemtime(__DIR__ . "/../assets/css/animations.css") ?>">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/responsive.css?v=<?= filemtime(__DIR__ . "/../assets/css/responsive.css") ?>">
 <?php foreach ($extra_css as $href): ?>
 <link rel="stylesheet" href="<?= htmlspecialchars($href) ?>">
 <?php endforeach; ?>

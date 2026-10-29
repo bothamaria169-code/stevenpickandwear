@@ -3,10 +3,6 @@ require_once __DIR__ . '/includes/functions.php';
 
 $page_title = 'Steven Picknwear — The International Brand Outlet';
 $meta_description = 'Steven Picknwear: suits, denim and occasion wear for women, men and kids. Shop online and pay safely by EFT, with delivery across South Africa.';
-$extra_js = [
-    'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js',
-    SITE_URL . '/assets/js/hero-three.js',
-];
 require_once __DIR__ . '/includes/header.php';
 
 $repo = new ProductRepository();
@@ -19,21 +15,29 @@ $catCounts = array_column(get_categories(), 'product_count', 'slug');
 ?>
 
 <!-- ── Hero ─────────────────────────────────────────────────────────── -->
-<section class="hero">
-  <canvas id="heroCanvas"></canvas>
-  <div class="container-ric">
+<!-- Desktop shows the full banner (its headline is part of the artwork, so the
+     HTML copy is visually hidden there). Phones get the models-only crop with
+     the headline as real text underneath. -->
+<section class="hero hero-banner">
+  <picture class="hero-media">
+    <source media="(max-width: 991.98px)" srcset="<?= SITE_URL ?>/assets/img/banners/hero-mobile.webp" type="image/webp">
+    <source srcset="<?= SITE_URL ?>/assets/img/banners/hero.webp" type="image/webp">
+    <img src="<?= SITE_URL ?>/assets/img/banners/hero.jpg" alt="Three men in Steven Picknwear tailoring: a charcoal mandarin suit, a rust jacquard blazer and a black safari suit" width="1983" height="793" fetchpriority="high">
+  </picture>
+  <div class="container-ric hero-overlay">
     <div class="hero-content">
-      <span class="eyebrow">The International Brand Outlet</span>
-      <div class="hero-brand">Steven Picknwear</div>
-      <h1 class="hero-title">Dress like you mean it.</h1>
-      <p class="hero-lede">Tailored suits, everyday denim and show-stopping occasion wear for women, men and kids. Pick your size, pay safely by EFT, and we'll deliver anywhere in South Africa.</p>
-      <div class="d-flex gap-3 flex-wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">The International Brand Outlet</span>
+        <div class="hero-brand">Steven Picknwear</div>
+        <h1 class="hero-title">Dress like you mean it.</h1>
+        <p class="hero-lede">Tailored suits, everyday denim and show-stopping occasion wear for women, men and kids. Pick your size, pay safely by EFT, and we'll deliver anywhere in South Africa.</p>
+      </div>
+      <div class="hero-actions d-flex gap-3 flex-wrap">
         <a href="<?= SITE_URL ?>/shop.php?category=women" class="btn-ric">Shop Women</a>
         <a href="<?= SITE_URL ?>/shop.php?category=men" class="btn-ghost-light">Shop Men</a>
       </div>
     </div>
   </div>
-  <div class="hero-scroll-cue"><span>Scroll</span><span class="line"></span></div>
 </section>
 
 <!-- ── Featured pieces ──────────────────────────────────────────────── -->
@@ -63,8 +67,12 @@ $catCounts = array_column(get_categories(), 'product_count', 'slug');
   </div>
 </section>
 
+<?php image_banner('assets/img/banners/workshop.jpg', 'Made With Care', 'Every piece passes through our workshop',
+    'Our tailors check, fit and finish each garment before it reaches you. Alterations and made-to-measure on request.',
+    [['Meet The Team', SITE_URL . '/about.php', 'primary'], ['Chat To Us', SITE_URL . '/contact.php', 'ghost']]); ?>
+
 <!-- ── Shop by department ───────────────────────────────────────────── -->
-<section class="section-sm" style="background:var(--cream);">
+<section class="section-sm bg-blush">
   <div class="container-ric">
     <div class="section-heading reveal">
       <div><span class="eyebrow">Explore</span><h2>Shop By Department</h2></div>
@@ -108,6 +116,21 @@ $catCounts = array_column(get_categories(), 'product_count', 'slug');
       </div>
     </div>
     <?php endif; ?>
+  </div>
+</section>
+
+<!-- ── Kids ─────────────────────────────────────────────────────────── -->
+<section class="section-sm">
+  <div class="container-ric">
+    <div class="kids-banner reveal">
+      <div class="kids-banner-body">
+        <span class="eyebrow">New: Kidswear</span>
+        <h2>Little ones, big occasions</h2>
+        <p>Ankara dresses, agbada sets and embroidered suits for weddings, birthdays and family celebrations. Every kids piece R1,199.</p>
+        <a href="<?= SITE_URL ?>/shop.php?category=kids" class="btn-ric mt-2">Shop Kids</a>
+      </div>
+      <img src="<?= SITE_URL ?>/assets/img/banners/kids.jpg" alt="Kids in Ankara dresses, an agbada set and an embroidered suit" loading="lazy">
+    </div>
   </div>
 </section>
 
@@ -159,10 +182,14 @@ $catCounts = array_column(get_categories(), 'product_count', 'slug');
 </section>
 <?php endif; ?>
 
+<?php image_banner('assets/img/banners/street.jpg', 'The New Season Edit', 'Safari suits, mandarin collars and statement blazers',
+    'Fresh from our latest shoot. Sharp, modern tailoring at R2,999.',
+    [['Shop Men', SITE_URL . '/shop.php?category=men', 'primary']]); ?>
+
 <!-- ── Newsletter CTA ───────────────────────────────────────────────── -->
 <section class="section-sm">
   <div class="container-ric">
-    <div class="glass-panel-dark p-5 text-center reveal" style="background:linear-gradient(135deg,var(--espresso),var(--espresso-2));">
+    <div class="glass-panel-dark p-5 text-center reveal" style="background:linear-gradient(135deg,var(--brand-red),var(--saddle-dark));">
       <span class="eyebrow" style="color:var(--saddle-light);">Stay In The Loop</span>
       <h2 class="mt-2 mb-3" style="color:var(--ivory);">Be first to know about new stock</h2>
       <form id="heroNewsletterForm" class="d-flex gap-2 justify-content-center flex-wrap" style="max-width:460px;margin:0 auto;">

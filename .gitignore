@@ -15,3 +15,6 @@ product-images/
 
 # Owner documents (not for the website)
 *.pdf
+
+# Build output (upload zip, install SQL)
+dist/

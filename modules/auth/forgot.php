@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verify_csrf($_POST['csrf_token'] ??
                 $token = bin2hex(random_bytes(32));
                 db_update('users', (int) $user['id'], ['reset_token' => $token, 'reset_expires' => date('Y-m-d H:i:s', time() + 3600)]);
                 $resetUrl = SITE_URL . '/modules/auth/reset.php?token=' . $token;
-                Mailer::send($email, 'Reset your password', email_wrap("<p>Hi {$user['name']},</p><p>Click below to reset your password. This link expires in 1 hour.</p><p><a href=\"{$resetUrl}\" style=\"color:#A9713D;\">Reset Password</a></p><p>If you didn't request this, you can safely ignore this email.</p>"));
+                Mailer::send($email, 'Reset your password', email_wrap("<p>Hi {$user['name']},</p><p>Click below to reset your password. This link expires in 1 hour.</p><p><a href=\"{$resetUrl}\" style=\"color:#A50E14;\">Reset Password</a></p><p>If you didn't request this, you can safely ignore this email.</p>"));
             }
         }
         $sent = true; // Same response whether or not the email exists (no account enumeration)

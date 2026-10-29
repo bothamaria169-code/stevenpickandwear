@@ -65,15 +65,15 @@ final class NewsletterService
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F1E7DA;padding:32px 0;">
             <tr><td align="center">
               <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#FAF6F0;border-radius:12px;overflow:hidden;max-width:600px;width:92%;">
-                <tr><td style="background:#2B1B12;padding:28px 32px;text-align:center;">
+                <tr><td style="background:#4A0507;padding:28px 32px;text-align:center;">
                   <span style="color:#FAF6F0;font-size:22px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;">Steven Picknwear</span>
                 </td></tr>
-                <tr><td style="padding:32px;color:#241611;font-size:15px;line-height:1.6;">
+                <tr><td style="padding:32px;color:#1F0A0B;font-size:15px;line-height:1.6;">
                   {$innerHtml}
                 </td></tr>
-                <tr><td style="background:#F1E7DA;padding:20px 32px;text-align:center;font-size:12px;color:#6B584A;">
-                  &copy; {$this->year()} Steven Picknwear &middot; <a href="{$siteUrl}" style="color:#A9713D;">{$siteUrl}</a><br>
-                  <a href="{$siteUrl}/modules/newsletter/unsubscribe.php?token={{unsubscribe_token}}" style="color:#6B584A;">Unsubscribe</a>
+                <tr><td style="background:#F1E7DA;padding:20px 32px;text-align:center;font-size:12px;color:#6E5452;">
+                  &copy; {$this->year()} Steven Picknwear &middot; <a href="{$siteUrl}" style="color:#A50E14;">{$siteUrl}</a><br>
+                  <a href="{$siteUrl}/modules/newsletter/unsubscribe.php?token={{unsubscribe_token}}" style="color:#6E5452;">Unsubscribe</a>
                 </td></tr>
               </table>
             </td></tr>

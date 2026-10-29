@@ -93,7 +93,7 @@ require_once __DIR__ . '/../../includes/header.php';
             <img src="<?= htmlspecialchars(product_image($img['image'])) ?>" style="width:100%;height:100%;object-fit:cover;">
             <form method="POST" onsubmit="return confirm('Remove this image?');" style="position:absolute;top:8px;right:8px;">
               <?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= $img['id'] ?>">
-              <button type="submit" style="width:28px;height:28px;border-radius:50%;background:rgba(43,27,18,.7);color:#fff;border:none;"><i class="fa-solid fa-trash-can" style="font-size:.65rem;"></i></button>
+              <button type="submit" style="width:28px;height:28px;border-radius:50%;background:rgba(58,6,8,.7);color:#fff;border:none;"><i class="fa-solid fa-trash-can" style="font-size:.65rem;"></i></button>
             </form>
           </div>
           <?php if ($img['title']): ?><div class="small fw-600 mt-1"><?= htmlspecialchars($img['title']) ?></div><?php endif; ?>

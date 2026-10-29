@@ -34,6 +34,16 @@ function shop_qs(array $overrides): string {
 }
 ?>
 
+<?php
+$shopBanners = [
+    ''      => ['assets/img/banners/collection.jpg', 'Shop The Collection', 'International style at outlet prices'],
+    'women' => ['assets/img/banners/women.jpg', 'For Her', 'Suits, denim and occasion wear'],
+    'men'   => ['assets/img/banners/men.jpg', 'For Him', 'Tailoring that means business'],
+    'kids'  => ['assets/img/banners/kids.jpg', 'For The Little Ones', 'Kidswear for every celebration'],
+];
+[$bImg, $bEyebrow, $bTitle] = $shopBanners[$activeCat] ?? $shopBanners[''];
+image_banner($bImg, $bEyebrow, $bTitle, '', [], 'p', 'is-page');
+?>
 <section class="section-sm">
   <div class="container-ric">
 

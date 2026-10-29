@@ -41,6 +41,32 @@ function editorial_image(string $key): ?string
     return !empty($map[$key]) ? product_image($map[$key]) : null;
 }
 
+/**
+ * Full-width photo banner with a red veil. $image is relative to the site root.
+ * $buttons = [[label, url, 'primary'|'ghost'], ...]. $tag = heading tag (h1 on page tops).
+ */
+function image_banner(string $image, string $eyebrow, string $title, string $text = '', array $buttons = [], string $tag = 'h2', string $class = ''): void
+{
+    ?>
+    <section class="img-banner <?= htmlspecialchars($class) ?>">
+      <img src="<?= htmlspecialchars(product_image($image)) ?>" alt="" loading="<?= str_contains($class, 'is-page') ? 'eager' : 'lazy' ?>">
+      <div class="img-banner-veil"></div>
+      <div class="container-ric img-banner-body">
+        <span class="eyebrow"><?= htmlspecialchars($eyebrow) ?></span>
+        <<?= $tag ?> class="img-banner-title"><?= htmlspecialchars($title) ?></<?= $tag ?>>
+        <?php if ($text): ?><p class="img-banner-text"><?= htmlspecialchars($text) ?></p><?php endif; ?>
+        <?php if ($buttons): ?>
+        <div class="d-flex gap-2 flex-wrap">
+          <?php foreach ($buttons as [$label, $url, $style]): ?>
+            <a href="<?= htmlspecialchars($url) ?>" class="<?= $style === 'ghost' ? 'btn-ghost-light' : 'btn-ric' ?>"><?= htmlspecialchars($label) ?></a>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+      </div>
+    </section>
+    <?php
+}
+
 // ── Upload helpers ─────────────────────────────────────────────────────
 /** Plain-English message for a PHP upload error code (null when the upload is fine). */
 function upload_error_message(int $code): ?string
@@ -322,12 +348,12 @@ function email_wrap(string $innerHtml): string
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F1E7DA;padding:32px 0;">
         <tr><td align="center">
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#FAF6F0;border-radius:12px;overflow:hidden;max-width:600px;width:92%;">
-            <tr><td style="background:#2B1B12;padding:28px 32px;text-align:center;">
+            <tr><td style="background:#4A0507;padding:28px 32px;text-align:center;">
               <span style="color:#FAF6F0;font-size:22px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;">Steven Picknwear</span>
             </td></tr>
-            <tr><td style="padding:32px;color:#241611;font-size:15px;line-height:1.6;">{$innerHtml}</td></tr>
-            <tr><td style="background:#F1E7DA;padding:20px 32px;text-align:center;font-size:12px;color:#6B584A;">
-              &copy; {$year} Steven Picknwear &middot; <a href="{$siteUrl}" style="color:#A9713D;">{$siteUrl}</a>
+            <tr><td style="padding:32px;color:#1F0A0B;font-size:15px;line-height:1.6;">{$innerHtml}</td></tr>
+            <tr><td style="background:#F1E7DA;padding:20px 32px;text-align:center;font-size:12px;color:#6E5452;">
+              &copy; {$year} Steven Picknwear &middot; <a href="{$siteUrl}" style="color:#A50E14;">{$siteUrl}</a>
             </td></tr>
           </table>
         </td></tr>
@@ -371,12 +397,12 @@ function order_payment_email_block(array $order): string
     }
     $rows = '';
     foreach (bank_details() as $label => $value) {
-        $rows .= '<tr><td style="padding:4px 12px 4px 0;color:#6B584A;">' . $label . '</td><td style="padding:4px 0;font-weight:600;">' . htmlspecialchars($value) . '</td></tr>';
+        $rows .= '<tr><td style="padding:4px 12px 4px 0;color:#6E5452;">' . $label . '</td><td style="padding:4px 0;font-weight:600;">' . htmlspecialchars($value) . '</td></tr>';
     }
-    $rows .= '<tr><td style="padding:4px 12px 4px 0;color:#6B584A;">Reference</td><td style="padding:4px 0;font-weight:600;">' . htmlspecialchars($order['order_number']) . '</td></tr>';
+    $rows .= '<tr><td style="padding:4px 12px 4px 0;color:#6E5452;">Reference</td><td style="padding:4px 0;font-weight:600;">' . htmlspecialchars($order['order_number']) . '</td></tr>';
     return '<p><strong>Next step:</strong> pay by EFT using your order number as the reference:</p>'
         . '<table role="presentation" style="margin:8px 0 16px;">' . $rows . '</table>'
-        . '<p>Then upload your proof of payment: <a href="' . order_link($order['order_number']) . '" style="color:#A9713D;">upload proof of payment</a>. '
+        . '<p>Then upload your proof of payment: <a href="' . order_link($order['order_number']) . '" style="color:#A50E14;">upload proof of payment</a>. '
         . 'You can also upload it from <em>My Orders</em> if you have an account.</p>';
 }
 
@@ -384,7 +410,7 @@ function notify_pop_uploaded(array $order): void
 {
     $html = '<p>A proof of payment was uploaded for order <strong>' . htmlspecialchars($order['order_number']) . '</strong> ('
         . format_price((float) $order['total_amount']) . ').</p>'
-        . '<p><a href="' . SITE_URL . '/dashboards/admin/order-detail.php?id=' . (int) $order['id'] . '" style="color:#A9713D;">Check it in the admin</a>.</p>';
+        . '<p><a href="' . SITE_URL . '/dashboards/admin/order-detail.php?id=' . (int) $order['id'] . '" style="color:#A50E14;">Check it in the admin</a>.</p>';
     Mailer::send(ADMIN_EMAIL, 'Proof of payment: ' . $order['order_number'], email_wrap($html));
 }
 
@@ -400,7 +426,7 @@ function notify_payment_decision(array $order, bool $approved, string $reason = 
         ? "<p>Hi {$name},</p><p>Your payment for order <strong>{$num}</strong> is confirmed. We're getting your order ready.</p>"
         : "<p>Hi {$name},</p><p>We couldn't match your proof of payment for order <strong>{$num}</strong>."
             . ($reason !== '' ? ' Reason: ' . htmlspecialchars($reason) . '.' : '') . '</p>'
-            . '<p>Please <a href="' . order_link($order['order_number']) . '" style="color:#A9713D;">upload a new proof of payment</a>, or reply to this email.</p>';
+            . '<p>Please <a href="' . order_link($order['order_number']) . '" style="color:#A50E14;">upload a new proof of payment</a>, or reply to this email.</p>';
     Mailer::send($email, ($approved ? 'Payment confirmed: ' : 'Action needed on your payment: ') . $order['order_number'], email_wrap($html));
 }
 

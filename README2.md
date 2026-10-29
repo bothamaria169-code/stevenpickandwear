@@ -1,5 +1,35 @@
 # stevenpickandwear.co.za: server setup and deploying the store
 
+## Update ready to deploy (29 Oct 2026)
+
+Done locally and checked, but **not on the live site yet**:
+- 6 new men's items from the photoshoot (safari and mandarin suits, rust jacquard blazer, satin shirt-and-trouser sets), with extra gallery photos.
+- 19 kids items (10 boys, 9 girls), R1,199 each. The Kids page now shows products instead of "coming soon".
+- New prices: every men's and women's item R2,999. Predict The Future Oversized Tee R900.
+- Banking details: FNB, account 63231801374, branch 250655 (holder and account type unchanged).
+- About page: "Inside Our Workshop" section with 9 photos and 2 videos.
+- Homepage hero is the new red banner (`assets/img/banners/hero.webp`). Phones get a crop showing only the models (`hero-mobile.webp`), with the headline as real text under it.
+- Site colours now follow the banner: deep oxblood, crimson and gold (all set in `assets/css/theme.css`). Stylesheets carry a `?v=` version, so visitors get the new colours without clearing their cache.
+- Footer is the logo red `#ED3232` (`--brand-red`).
+- Photo banners (workshop, shoot and kids photos): 3 on the homepage, 1 on About, and one at the top of Shop (different per department), Lookbook and Contact. Add more with `image_banner()` in `includes/functions.php`.
+- The Lookbook shows shoot and workshop photos until photos are uploaded in Admin → Gallery.
+- About page photo is the black safari suit shot (`assets/img/about.jpg`).
+
+Database changes are in `database/migrations/2026-10-29-catalog-update.sql`. It's safe to run twice.
+
+**Blocking the deploy (checked 29 Oct):**
+1. **DNS:** the domain lists Cloudflare *and* Truehost (`cloudoon`) nameservers, so it has no A record. At Truehost, leave only `sue.ns.cloudflare.com` and `vicente.ns.cloudflare.com`, then wait for propagation.
+2. **SSH:** `ssh gmf` is refused (`Permission denied (publickey…)`) and the server didn't answer on 443. Check the VPS is running and the key is still in `/root/.ssh/authorized_keys` (VPS panel console).
+
+**Deploy once both work (PC):**
+
+```powershell
+cd C:\xampp\htdocs\stevenpickandwear
+powershell -ExecutionPolicy Bypass -File scripts\deploy.ps1 -Migration database\migrations\2026-10-29-catalog-update.sql
+```
+
+The script stops before changing anything if DNS or SSH isn't ready. Then it pushes the code, backs up the live database to `/root/backups/`, runs the migration and prints the new product counts, prices and bank details.
+
 ## Status (25 Sep 2026): the store is LIVE
 
 Latest fixes (25 Sep):

@@ -6,6 +6,19 @@ $meta_description = 'The Steven Picknwear lookbook: outfits and styling ideas.';
 require_once __DIR__ . '/includes/header.php';
 
 $images = db()->query("SELECT * FROM gallery_images ORDER BY sort_order, id")->fetchAll();
+if (!$images) {
+    // Until the admin uploads lookbook photos, show the latest shoot and the workshop.
+    $shoot = ['black-safari-suit', 'rust-jacquard-blazer-2', 'steel-blue-satin-shirt-trouser-set', 'charcoal-pinstripe-mandarin-suit',
+              'rust-jacquard-blazer', 'steel-blue-satin-shirt-trouser-set-2', 'chocolate-satin-shirt-trouser-set', 'black-safari-suit-3',
+              'girls-blue-ankara-skater-dress', 'boys-white-gold-embroidered-suit', 'girls-orange-tulle-party-dress-with-bag', 'boys-royal-blue-agbada-set-with-cap'];
+    foreach ($shoot as $slug) {
+        $images[] = ['image' => "assets/img/products/$slug.jpg", 'title' => '', 'caption' => ''];
+    }
+    foreach (['workshop-01', 'workshop-04', 'workshop-07'] as $photo) {
+        $images[] = ['image' => "assets/img/office/$photo.jpg", 'title' => 'Our workshop', 'caption' => ''];
+    }
+}
+image_banner('assets/img/banners/workshop-tailor.jpg', 'Style Inspiration', 'The Lookbook', 'Outfits from our shoots and a look inside the workshop.', [], 'p', 'is-page');
 ?>
 <section class="section-sm">
   <div class="container-ric">
@@ -26,7 +39,7 @@ $images = db()->query("SELECT * FROM gallery_images ORDER BY sort_order, id")->f
               <span class="gallery-zoom-cue"><i class="fa-solid fa-expand"></i></span>
               <img src="<?= htmlspecialchars(product_image($img['image'])) ?>" alt="<?= htmlspecialchars($img['title'] ?? 'Steven Picknwear lookbook') ?>" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
               <?php if ($img['title'] || $img['caption']): ?>
-              <span style="position:absolute;left:0;right:0;bottom:0;padding:1rem;background:linear-gradient(transparent,rgba(43,27,18,.85));color:var(--ivory);text-align:left;display:block;">
+              <span style="position:absolute;left:0;right:0;bottom:0;padding:1rem;background:linear-gradient(transparent,rgba(58,6,8,.85));color:var(--ivory);text-align:left;display:block;">
                 <?php if ($img['title']): ?><span class="fw-700 small d-block"><?= htmlspecialchars($img['title']) ?></span><?php endif; ?>
                 <?php if ($img['caption']): ?><span class="small d-block" style="opacity:.85;"><?= htmlspecialchars($img['caption']) ?></span><?php endif; ?>
               </span>

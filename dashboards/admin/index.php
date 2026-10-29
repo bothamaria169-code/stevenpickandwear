@@ -97,12 +97,12 @@ new Chart(document.getElementById('ordersChart'), {
   type: 'bar',
   data: {
     labels: <?= json_encode($chartLabels) ?>,
-    datasets: [{ label: 'Orders', data: <?= json_encode($chartData) ?>, backgroundColor: '#A9713D', borderRadius: 6, maxBarThickness: 36 }],
+    datasets: [{ label: 'Orders', data: <?= json_encode($chartData) ?>, backgroundColor: '#A50E14', borderRadius: 6, maxBarThickness: 36 }],
   },
   options: {
     responsive: true,
     plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: 'rgba(43,27,18,.08)' } }, x: { grid: { display: false } } },
+    scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: 'rgba(58,6,8,.08)' } }, x: { grid: { display: false } } },
   },
 });
 </script>

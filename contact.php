@@ -47,6 +47,7 @@ $instagram    = get_setting('instagram_url');
 $page_title = 'Contact — ' . SITE_NAME;
 $meta_description = 'Get in touch with Steven Picknwear: questions about sizing, orders, payments or delivery.';
 require_once __DIR__ . '/includes/header.php';
+image_banner('assets/img/banners/shop-front.jpg', 'Visit Or Message Us', "We're here to help", 'Sizing, orders, payments or delivery: get in touch and our team will sort it out.', [], 'p', 'is-page');
 ?>
 <section class="section">
   <div class="container-ric">

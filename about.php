@@ -14,7 +14,7 @@ require_once __DIR__ . '/includes/header.php';
 
     <div class="story-split mb-5">
       <div class="reveal">
-        <img src="<?= htmlspecialchars(get_setting('about_image') ?: editorial_image('about') ?: SITE_URL . '/assets/img/logo/logo.png') ?>" alt="Tailored suit at Steven Picknwear" style="width:100%;max-height:640px;object-fit:cover;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);">
+        <img src="<?= htmlspecialchars(get_setting('about_image') ?: editorial_image('about') ?: SITE_URL . '/assets/img/logo/logo.png') ?>" alt="A man in the Steven Picknwear black safari suit" style="width:100%;max-height:640px;object-fit:cover;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);">
       </div>
       <div class="reveal">
         <span class="eyebrow">The International Brand Outlet</span>
@@ -47,6 +47,31 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 
     <div class="mt-5 pt-4" style="border-top:1px solid var(--border-light);">
+      <div class="section-heading reveal"><div><span class="eyebrow">Behind The Seams</span><h2>Inside Our Workshop</h2></div></div>
+      <p class="text-muted-ric mb-4" style="max-width:640px;">Every piece is checked, fitted and finished by our team. Here's where it happens.</p>
+      <div class="row g-3">
+        <?php foreach (['shop-front', 'workshop-01', 'workshop-02', 'workshop-03', 'workshop-04', 'workshop-05', 'workshop-06', 'workshop-07', 'workshop-08'] as $photo): ?>
+        <div class="col-6 col-md-4 reveal">
+          <img src="<?= SITE_URL ?>/assets/img/office/<?= $photo ?>.jpg" alt="<?= $photo === 'shop-front' ? 'The Steven Picknwear shop front' : 'Our team at work in the Steven Picknwear workshop' ?>" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);">
+        </div>
+        <?php endforeach; ?>
+        <?php foreach ([1, 2] as $v): ?>
+        <div class="col-12 col-md-6 reveal">
+          <video src="<?= SITE_URL ?>/assets/video/workshop-<?= $v ?>.mp4" controls muted playsinline preload="metadata" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-lg);background:#000;"></video>
+        </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<?php image_banner('assets/img/banners/street.jpg', 'The New Season Edit', 'Dress like you mean it', 'Safari suits, mandarin collars and statement blazers from our latest shoot.',
+    [['Shop Men', SITE_URL . '/shop.php?category=men', 'primary'], ['Shop Women', SITE_URL . '/shop.php?category=women', 'ghost']]); ?>
+
+<section class="section">
+  <div class="container-ric">
+    <div>
       <div class="section-heading reveal"><div><span class="eyebrow">Shop By Department</span><h2>Find Your Look</h2></div></div>
       <div class="row g-3">
         <?php foreach (MAIN_CATEGORIES as $slug => $label): $img = editorial_image('cta_' . $slug); ?>
