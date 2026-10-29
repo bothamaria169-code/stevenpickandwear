@@ -7,7 +7,9 @@ $testResult = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'test_email' && verify_csrf($_POST['csrf_token'] ?? '')) {
     $to = safe_email($_POST['test_to'] ?? '') ?: $current_user['email'];
     $ok = Mailer::send($to, 'Test email from ' . SITE_NAME, email_wrap('<p>This is a test email from your store. If you can read this, order emails are working.</p><p>Sent ' . date('d M Y, H:i') . '.</p>'));
-    $testResult = $ok ? ['ok' => true, 'msg' => 'Test email sent to ' . $to . '. Check the inbox (and spam).']
+    $via = Mailer::$lastTransport === 'smtp' ? 'SMTP (' . Mailer::smtpHost() . ')' : "the server's mail";
+    $testResult = $ok ? ['ok' => true, 'msg' => 'Test email sent to ' . $to . ' through ' . $via . '. Check the inbox (and spam).'
+                                       . (Mailer::$lastError ? ' Note: ' . Mailer::$lastError : '')]
                       : ['ok' => false, 'msg' => 'Sending failed: ' . (Mailer::$lastError ?: 'unknown error')];
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && verify_csrf($_POST['csrf_token'] ?? '')) {
     $fields = [
@@ -86,14 +88,15 @@ require_once __DIR__ . '/../../includes/header.php';
           </div>
 
           <div class="admin-card mb-3">
-            <h3 class="h6 mb-3">Email (Brevo SMTP)</h3>
+            <h3 class="h6 mb-3">Email (PHPMailer)</h3>
             <?php $smtpOn = SMTP_USER !== '' && SMTP_PASS !== ''; ?>
             <p class="small mb-2">Status:
-              <span class="status-pill <?= $smtpOn ? 'active' : 'pending' ?>"><?= $smtpOn ? 'Connected' : 'Not set up' ?></span>
+              <span class="status-pill <?= $smtpOn ? 'active' : 'pending' ?>"><?= $smtpOn ? 'SMTP login set' : 'Server mail only' ?></span>
             </p>
             <p class="small text-muted-ric mb-3">
-              Server: <strong class="text-dark"><?= htmlspecialchars(SMTP_HOST ?: '—') ?></strong>
-              &middot; Sends from: <strong class="text-dark"><?= htmlspecialchars(SMTP_FROM_EMAIL) ?></strong><br>
+              Server: <strong class="text-dark"><?= htmlspecialchars($smtpOn ? Mailer::smtpHost() . ':' . SMTP_PORT : 'this server') ?></strong>
+              &middot; Sends from: <strong class="text-dark"><?= htmlspecialchars(filter_var(SMTP_USER, FILTER_VALIDATE_EMAIL) ? SMTP_USER : SMTP_FROM_EMAIL) ?></strong><br>
+              If the SMTP login fails, emails go out through the server's own mail instead.<br>
               The login is kept on the server in <code>config/config.local.php</code> for security.
             </p>
             <?php if ($testResult): ?>
