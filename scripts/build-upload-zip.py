@@ -65,7 +65,8 @@ def main():
             elif m.isfile():
                 z.writestr(entry(name), t.extractfile(m).read()); files += 1
         for d in ("uploads/products/", "uploads/proof-of-payments/"):
-            z.writestr(entry(d, True), b"")
+            if d not in z.namelist():
+                z.writestr(entry(d, True), b"")
         if "--config" in sys.argv:
             z.writestr(entry("config/config.local.php"), CONFIG.format(secret=secrets.token_hex(32))); files += 1
     print(f"{OUT}: {files} files, {dirs} folders" + (" (with config.local.php)" if "--config" in sys.argv else ""))
