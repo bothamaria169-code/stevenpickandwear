@@ -1,5 +1,22 @@
 # stevenpickandwear.co.za: server setup and deploying the store
 
+## New host (cPanel, database `nlnthdft_database`)
+
+GitHub repo: https://github.com/bothamaria169-code/stevenpickandwear (**public**, so no passwords in it, ever).
+On the PC, `git push github main` updates GitHub.
+
+**1. Database (once):** cPanel → **phpMyAdmin** → `nlnthdft_database` → **Import** → `dist/nlnthdft_database-install.sql`. It holds the full schema, all 178 products, settings, FNB details and the admin user. Import it into an **empty** database only.
+
+**2. Server settings (once):** create `config/config.local.php` in the site folder. Copy it from the upload zip (`dist/stevenpickandwear-site.zip`), which has the database name and a random secret filled in. Set `DB_USER` and `DB_PASS` to the user from cPanel → **MySQL Databases** (give that user ALL PRIVILEGES on `nlnthdft_database`). This file is never in Git.
+
+**3. Site files, choose one:**
+- **GitHub (preferred):** cPanel → **Git Version Control** → **Create** → Clone URL `https://github.com/bothamaria169-code/stevenpickandwear.git`, repository path e.g. `/home/nlnthdft/repositories/stevenpickandwear`. Then **Manage** → **Pull or Deploy** → **Deploy HEAD Commit**. `.cpanel.yml` copies the site into `/home/nlnthdft/public_html/`. If your cPanel username or folder is different, change `DEPLOYPATH` in `.cpanel.yml` first. Each later update: push to GitHub, then **Update from Remote** + **Deploy HEAD Commit**.
+- **File Manager:** upload `dist/stevenpickandwear-site.zip` to `public_html`, **Extract**, then edit `config/config.local.php` (step 2).
+
+**4. After it's up:** log in at `/dashboards/admin/`, **change the admin password** (its hash is in the public repo's SQL), check Settings → Banking Details, and set up email (Brevo section below).
+
+The zip and SQL are rebuilt locally into `dist/` (not in Git).
+
 ## Update ready to deploy (29 Oct 2026)
 
 Done locally and checked, but **not on the live site yet**:
